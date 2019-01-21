@@ -47,6 +47,9 @@ int set_Parity(int fd,int databits,int stopbits,int parity){
 		perror("SetupSerial 1");
 		return 1;
 	}
+
+	options.c_cflag |= (CLOCAL | CREAD); //add-on
+
 	options.c_cflag &= ~CSIZE;
 	switch (databits){
 		case 7:		options.c_cflag |= CS7; break;
@@ -76,14 +79,22 @@ int set_Parity(int fd,int databits,int stopbits,int parity){
 	/* Set input parity option */
 	if (parity != 'n')
 		options.c_iflag |= INPCK;
+
+	//add-on
+	options.c_cflag |= (CLOCAL | CREAD);
+	options.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);	/*Input*/
+	options.c_oflag &= ~OPOST;	/*Output*/
+
+	options.c_oflag &= ~(ONLCR | OCRNL);	//turn off the CR-NL convert
+	options.c_iflag &= ~(ICRNL | INLCR);
+	options.c_iflag &= ~(IXON | IXOFF | IXANY);
+
 	tcflush(fd, TCIFLUSH);
 	options.c_cc[VTIME] = 150;	/*设置超时 15 seconds */
 	options.c_cc[VMIN] = 0;		/*Upadate the options and do it now*/
 	if (tcsetattr(fd, TCSANOW, &options) != 0){
-		perror("SetupSerial 3");
+		perror("SetupSerial");
 		return 1;
 	}
-	options.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);	/*Input*/
-	options.c_oflag &= ~OPOST;	/*Output*/
 	return 0;
 }

@@ -43,7 +43,7 @@ int Sync(void){
 			if(cnt < 60){
 				sleep(1);
 				nwrite = write(fd, sync_cmd , 6);		//if no response, write again
-				printf("%d\r\n",nwrite);
+				printf("write = %d\r\n",nwrite);
 				cnt++;
 			}
 			else{

@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
+#include <errno.h>
 
 
 #define BAUNDRATE B115200
