@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
 	}
 
 	//Open USB
-	fd = open(interface, O_RDWR | O_NOCTTY | O_NDELAY);
+	fd = open(interface, O_RDWR | O_NOCTTY | O_NONBLOCK);
 	if (fd == -1){
 		printf("%s Open Error!\n", interface);
 		return FALSE;
